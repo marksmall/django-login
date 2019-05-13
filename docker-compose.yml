@@ -1,0 +1,58 @@
+version: "3.5"
+services:
+  db:
+    image: kartoza/postgis:9.5-2.2
+    environment:
+      POSTGRES_USER: server
+      POSTGRES_PASS: server
+      POSTGRES_DBNAME: server
+      ALLOW_IP_RANGE: 0.0.0.0/0
+    ports:
+      - "5666:5432"
+    networks:
+      - frontend-login
+
+  server:
+    build:
+      context: .
+    env_file: .env
+    environment:
+      - DJANGO_SETTINGS_MODULE=server.settings
+    command: >
+      -c "cd /opt/frontend-login/ && pipenv install --dev --system"
+      -c "until echo > /dev/tcp/db/5432; do sleep 1; done"
+      -c "until test -f /opt/frontend-login/client/build/asset-manifest.json; do sleep 1; done"
+      -m "migrate --noinput"
+      -m "collectstatic --noinput"
+      -m "runserver 0.0.0.0:8000"
+    tty: true
+    volumes:
+      - .:/opt/frontend-login/
+      - ./client:/opt/frontend-login/client/
+    ports:
+      - "8000:8000"
+    networks:
+      - frontend-login
+
+  client:
+    image: node:10.15.3
+    environment:
+      NODE_ENV: "development"
+    working_dir: /opt/frontend-login/client
+    volumes:
+      - ./client:/opt/frontend-login/client
+    command: bash -c "yarn install && yarn build && yarn start"
+    tty: true
+    ports:
+      - "3000:3000"
+      - "35729:35729"
+    networks:
+      - frontend-login
+
+networks:
+  frontend-login:
+    driver: bridge
+    # ipam:
+    #   driver: default
+    #   config:
+    #     - subnet: 13.0.0.0/24
