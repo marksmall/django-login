@@ -15,6 +15,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
 from .serializers import RegistrationSerializer, UserSerializer, LoginSerializer
+# , ChangePasswordSerializer
 from .tokens import account_activation_token
 
 logging.config.listen()
@@ -116,3 +117,45 @@ class LoginView(GenericAPIView):
         else:
             LOGGER.error(f"{request.data} not valid: {serializer.errors}")
             return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
+
+
+# class ChangePasswordView(GenericAPIView):
+#     """ View enabling users to change their account password """
+#     serializer_class = ChangePasswordSerializer
+#     # permission_classes = (AllowAny, )
+
+#     def put(self, request):
+#         """ Handle login request """
+#         serializer = self.get_serializer(data=request.data)
+
+#         # if serializer.is_valid():
+#         #     user = serializer.validated_data
+#         #     return Response(UserSerializer(user).data, status.HTTP_200_OK)
+#         # else:
+#         #     LOGGER.error(f"{request.data} not valid: {serializer.errors}")
+#         #     return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
+#         if serializer.is_valid():
+#             user = serializer.save()
+#             user.is_active = False
+#             user.save()
+#             LOGGER.debug('USER: %s', user)
+
+#             site = get_current_site(request)
+#             subject = 'Activate Your Account'
+#             token = account_activation_token.make_token(user)
+#             message = render_to_string(
+#                 'account-activation-email.html', {
+#                     'user': user,
+#                     'domain': site.domain,
+#                     'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+#                     'token': token,
+#                 })
+#             LOGGER.info('Emailing activation token [%s] to user [%s]', message,
+#                         user)
+#             user.email_user(subject, message)
+
+#             return Response(UserSerializer(user).data,
+#                             status=status.HTTP_201_CREATED)
+#         else:
+#             return Response(serializer.errors,
+#                             status=status.HTTP_400_BAD_REQUEST)

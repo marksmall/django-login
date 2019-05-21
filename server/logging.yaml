@@ -20,7 +20,7 @@ handlers:
 
 loggers:
   server:
-    level: INFO
+    level: DEBUG
     handlers: [console, file]
     propagate: no
 

@@ -51,7 +51,8 @@ class LoginSerializer(serializers.Serializer):
     password = serializers.CharField()
 
     def validate(self, data):
-        """ Validate user has an account and that credentials match """
+        """ Validate user has an account and that old password matches """
+        LOGGER.debug(f"Validating {data}")
         user = authenticate(**data)
         if user and user.is_active:
             return user
@@ -60,10 +61,26 @@ class LoginSerializer(serializers.Serializer):
             "Unable to login with provided credentials")
 
 
+# class ChangePasswordSerializer(serializers.Serializer):
+#     """ LoginSerializer: Used to login """
+#     username = serializers.CharField()
+#     old_password = serializers.CharField()
+#     new_password = serializers.CharField()
+
+#     def validate(self, data):
+#         """ Validate user has an account and that credentials match """
+#         user = authenticate(**data)
+#         if user and user.is_active:
+#             return user
+
+#         raise serializers.ValidationError(
+#             "Unable to login with provided credentials")
+
+
 class UserSerializer(serializers.ModelSerializer):
     """UserSerializer: Used after successful registration"""
 
     class Meta(object):
         """ Meta class for UserSerializer """
         model = User
-        fields = ('id', 'username', 'email')
+        fields = ('id', 'username', 'email', 'profile')
