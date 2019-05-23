@@ -15,6 +15,7 @@ pyyaml = "*"
 uwsgi = "*"
 whitenoise = "*"
 django-environ = "*"
+django-allauth = "*"
 
 [dev-packages]
 codecov = "*"

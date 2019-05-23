@@ -9,6 +9,8 @@
   - [How to test](#how-to-test)
     - [Server](#server)
     - [Client](#client)
+  - [API interaction](#api-interaction)
+    - [Registration](#registration)
 
 ## Overview
 
@@ -107,8 +109,15 @@ $ docker-compose exec server ptw ./server/users
 ### Client
 
 ```bash
-$ docker-compose exec client yarn test
+docker-compose exec client yarn test
 ```
 
 [Back to Top](#project)
 
+## API interaction
+
+### Registration
+
+```bash
+curl 'http://localhost:8000/api/accounts/register/' -H 'content-type: application/json' --data-binary '{"username": "myusername", "email": "email@test.com", "password": "mypassword"}'
+```
