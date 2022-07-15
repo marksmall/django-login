@@ -23,7 +23,7 @@ django-allauth = "==0.39.1"
 django-environ = "==0.4.5"
 
 [dev-packages]
-codecov = "==2.0.15"
+codecov = "==2.0.16"
 coverage = "==4.5.1"
 coveralls = "==1.5.0"
 django-nose = "==1.4.5"
